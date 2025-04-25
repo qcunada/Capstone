@@ -25,6 +25,7 @@ public class Capstone1 {
                     break;
 
 
+
             }
         }
     }
@@ -40,7 +41,7 @@ public class Capstone1 {
 
     }
     public static void makePayment(){
-
+        String var = "hi";
     }
 
 
