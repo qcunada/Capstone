@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class LedgerApp {
@@ -12,6 +14,7 @@ public class LedgerApp {
     public static void main(String[] args) {
 
         System.out.println("** WELCOME TO THE BANK APP **");
+        System.out.println();
         homeScreen();
 
     }
@@ -21,12 +24,15 @@ public class LedgerApp {
         boolean run = true;
         while (run) {
 
-
+            System.out.println("opening the main menu...");
+            System.out.println();
+            System.out.println("* * * MAIN MENU * * *");
             System.out.println("What do you want to do today?");
             System.out.println("(1) Add Deposit");
             System.out.println("(2) Make Payment");
             System.out.println("(3) Open Ledger Screen");
             System.out.println("(4) Exit");
+            System.out.println("Choose an option: ");
 
 
             String choice = scanner.nextLine().trim();
@@ -45,7 +51,7 @@ public class LedgerApp {
                     run = false;
                     break;
                 default:
-                    System.out.println("Invalid option. Please choose 1-4 options.");
+                    System.out.println("Invalid option. Please choose between 1-4 options.");
 
             }
         }
@@ -113,15 +119,22 @@ public class LedgerApp {
 
     public static void showLedger(){
 
-        System.out.println("* You opened the ledger. *");
-        System.out.println("(a) Show all entries.");
-        System.out.println("(b) Display only deposits.");
-        System.out.println("(c) Display only payments.");
-        System.out.println("(x) Reports.");
-        System.out.println("choose an option:");
+        boolean runLedger = true;
+        while (runLedger) {
 
-        String choiceLedger = scanner.nextLine().toLowerCase();
-            switch (choiceLedger){
+            System.out.println();
+            System.out.println("Opening the ledger screen...");
+            System.out.println();
+            System.out.println("* * * LEDGER SCREEN * * *");
+            System.out.println("(a) Show all entries.");
+            System.out.println("(b) Display only deposits.");
+            System.out.println("(c) Display only payments.");
+            System.out.println("(d) Reports.");
+            System.out.println("(e) Exit.");
+            System.out.println("choose an option:");
+
+            String choiceLedger = scanner.nextLine().toLowerCase();
+            switch (choiceLedger) {
                 case "a":
                     showAllEntries();
                     break;
@@ -131,20 +144,33 @@ public class LedgerApp {
                 case "c":
                     showPayments();
                     break;
-                case "x":
+                case "d":
                     reports();
+                case "e":
+                    runLedger = false;
+                    break;
+                default:
+                    System.out.println("Invalid option. Please choose between the options on the screen.");
+                    System.out.println();
+
 
             }
+
+        }
 
     }
 
     public static void showAllEntries(){
         try(BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
             String line;
-            System.out.println("Here are all your transactions.");
+            System.out.println("* Here are all your transactions: *");
+
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
             }
+            System.out.println();
+            System.out.println("Press enter to go back to the ledger screen.");
+            scanner.nextLine();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -154,7 +180,7 @@ public class LedgerApp {
     public static void showDeposits(){
         try(BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
             String line;
-            System.out.println("Here are all your deposited transactions.");
+            System.out.println("* Here are all your deposited transactions: *");
             while ((line = reader.readLine()) != null) {
 
                 String[] entries = line.split("\\|");
@@ -166,6 +192,9 @@ public class LedgerApp {
                     }
                 }
             }
+            System.out.println();
+            System.out.println("Press enter to go back to the ledger screen.");
+            scanner.nextLine();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -175,7 +204,7 @@ public class LedgerApp {
     public static void showPayments() {
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
             String line;
-            System.out.println("Here are all your payment transactions.");
+            System.out.println("Here are all your payment transactions:");
             while ((line = reader.readLine()) != null) {
 
                 String[] entries = line.split("\\|");
@@ -187,6 +216,9 @@ public class LedgerApp {
                     }
                 }
             }
+            System.out.println();
+            System.out.println("Press enter to go back to the ledger screen.");
+            scanner.nextLine();
         } catch (Exception e) {
             System.out.println(e.getMessage());
 
@@ -198,7 +230,10 @@ public class LedgerApp {
         boolean reportsMenu = true;
 
         while (reportsMenu) {
-            System.out.println("* You opened the reports menu. *");
+            System.out.println();
+            System.out.println("Opening the reports menu... ");
+            System.out.println();
+            System.out.println("* * * REPORTS MENU * * *");
             System.out.println("(1) Month To Date");
             System.out.println("(2) Previous Month");
             System.out.println("(3) Year To Date");
@@ -207,26 +242,28 @@ public class LedgerApp {
             System.out.println("(0) Exit");
             System.out.println("Choose an option: ");
 
-            int choiceReports = Integer.parseInt(scanner.nextLine());
+            String choiceReports = scanner.nextLine().trim();
             switch (choiceReports) {
-                case 1:
+                case "1":
                     showMonthToDate();
                     break;
-                case 2:
+                case "2":
                     showPreviousMonth();
                     break;
-                case 3:
+                case "3":
                     showYearToDate();
                     break;
-                case 4:
+                case "4":
                     showPreviousYear();
                     break;
-                case 5:
+                case "5":
                     searchByVendor();
                     break;
-                case 0:
+                case "0":
                     reportsMenu = false;
                     break;
+                default:
+                    System.out.println("Invalid option. Please choose between the options on the screen.");
             }
 
         }
@@ -236,13 +273,14 @@ public class LedgerApp {
         LocalDate now = LocalDate.now();
         int year = now.getYear();
         int month = now.getMonthValue();
+        String monthName = now.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
             String line;
 
-            System.out.println("Month to Date Transactions: ");
+            System.out.println("Month to Date Transactions [" + monthName + "]: ");
             while ((line = reader.readLine()) != null) {
                 String[] entries = line.split("\\|");
                 if (entries.length >= 5){
@@ -254,7 +292,9 @@ public class LedgerApp {
                 }
 
             }
-
+            System.out.println();
+            System.out.println("Press enter to go back to the reports menu.");
+            scanner.nextLine();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -265,13 +305,16 @@ public class LedgerApp {
         LocalDate previousMonthDate = LocalDate.now().minusMonths(1);
         int year = previousMonthDate.getYear();
         int month = previousMonthDate.getMonthValue();
+        String lastMonthName = LocalDate.now().minusMonths(1).getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+
+        boolean found = false;
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
             String line;
 
-            System.out.println("Previous Month Transactions: ");
+            System.out.println("Previous Month Transactions [" + lastMonthName + "]: ");
             while ((line = reader.readLine()) != null) {
                 String[] entries = line.split("\\|");
                 if (entries.length >= 5){
@@ -279,10 +322,17 @@ public class LedgerApp {
 
                     if(entryDate.getYear() == year && entryDate.getMonthValue() == month){
                         System.out.println(line);
+                        found = true;
                     }
                 }
 
             }
+            if (!found) {
+                System.out.println("* You have no transactions from the previous month. *");
+            }
+            System.out.println();
+            System.out.println("Press enter to go back to the reports menu.");
+            scanner.nextLine();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -311,6 +361,9 @@ public class LedgerApp {
                 }
 
             }
+            System.out.println();
+            System.out.println("Press enter to go back to the reports menu.");
+            scanner.nextLine();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -342,8 +395,11 @@ public class LedgerApp {
 
             }
             if (!found){
-                System.out.println("You have no transactions from the previous year.");
+                System.out.println("* You have no transactions from the previous year. *");
             }
+            System.out.println();
+            System.out.println("Press enter to go back to the reports menu.");
+            scanner.nextLine();
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -375,6 +431,10 @@ public class LedgerApp {
         if (!found){
             System.out.println("No transactions with " + vendor + " found.");
         }
+            System.out.println();
+            System.out.println("Press enter to go back to the reports menu.");
+            scanner.nextLine();
+
     } catch (Exception e) {
         System.out.println(e.getMessage());
 
