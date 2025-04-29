@@ -11,7 +11,7 @@ public class LedgerApp {
         static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
 
-        System.out.println("WELCOME TO THE BANK APP");
+        System.out.println("** WELCOME TO THE BANK APP **");
         homeScreen();
 
     }
@@ -29,21 +29,23 @@ public class LedgerApp {
             System.out.println("(4) Exit");
 
 
-            int choice = Integer.parseInt(scanner.nextLine());
+            String choice = scanner.nextLine().trim();
             switch (choice) {
-                case 1:
+                case "1":
                     addDeposit();
                     break;
-                case 2:
+                case "2":
                     makePayment();
                     break;
-                case 3:
+                case "3":
                     showLedger();
                     break;
-                case 4:
+                case "4":
                     System.out.println("You chose to exit the app.");
                     run = false;
                     break;
+                default:
+                    System.out.println("Invalid option. Please choose 1-4 options.");
 
             }
         }
@@ -111,7 +113,7 @@ public class LedgerApp {
 
     public static void showLedger(){
 
-        System.out.println("You opened the ledger.");
+        System.out.println("* You opened the ledger. *");
         System.out.println("(a) Show all entries.");
         System.out.println("(b) Display only deposits.");
         System.out.println("(c) Display only payments.");
@@ -192,18 +194,21 @@ public class LedgerApp {
 
     }
 
-    public static void reports (){
-        System.out.println("You opened the reports menu.");
-        System.out.println("(1) Month To Date");
-        System.out.println("(2) Previous Month");
-        System.out.println("(3) Year To Date");
-        System.out.println("(4) Previous Year");
-        System.out.println("(5) Search By Vendor/Payer");
-        System.out.println("(0) Exit");
-        System.out.println("Choose an option: ");
+    public static void reports () {
+        boolean reportsMenu = true;
 
-        int choiceReports = Integer.parseInt(scanner.nextLine());
-            switch (choiceReports){
+        while (reportsMenu) {
+            System.out.println("* You opened the reports menu. *");
+            System.out.println("(1) Month To Date");
+            System.out.println("(2) Previous Month");
+            System.out.println("(3) Year To Date");
+            System.out.println("(4) Previous Year");
+            System.out.println("(5) Search By Vendor/Payer");
+            System.out.println("(0) Exit");
+            System.out.println("Choose an option: ");
+
+            int choiceReports = Integer.parseInt(scanner.nextLine());
+            switch (choiceReports) {
                 case 1:
                     showMonthToDate();
                     break;
@@ -220,8 +225,11 @@ public class LedgerApp {
                     searchByVendor();
                     break;
                 case 0:
+                    reportsMenu = false;
+                    break;
             }
 
+        }
 
     }
     public static void showMonthToDate(){
@@ -310,15 +318,71 @@ public class LedgerApp {
     }
 
     public static void showPreviousYear(){
+        LocalDate today = LocalDate.now();
+        int previousYear = today.getYear() -1;
 
+        boolean found = false;
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
+            String line;
+
+            System.out.println("Previous Year Transactions: ");
+            while ((line = reader.readLine()) != null) {
+                String[] entries = line.split("\\|");
+                if (entries.length >= 5){
+                    LocalDate entryDate = LocalDate.parse(entries[0].trim(),dtf);
+
+                    if(entryDate.getYear() == previousYear){
+                        System.out.println(line);
+                        found = true;
+                    }
+                }
+
+            }
+            if (!found){
+                System.out.println("You have no transactions from the previous year.");
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public static void searchByVendor(){
+        System.out.println("Enter the vendor/payer name to search: ");
+        String vendor = scanner.nextLine().trim().toUpperCase();
+
+        boolean found = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
+        String line;
+
+        while ((line = reader.readLine()) != null) {
+
+            String[] entries = line.split("\\|");
+            if (entries.length >= 5) {
+                String type = entries[3].trim();
+
+                if (type.equalsIgnoreCase(vendor)) {
+                    System.out.println("Here are your transactions with " + vendor + ": ");
+                    System.out.println(line);
+                    found = true;
+                }
+            }
+        }
+        if (!found){
+            System.out.println("No transactions with " + vendor + " found.");
+        }
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
 
     }
-    public static void filteredEntries(){
+
 
     }
+
 
 }
 
