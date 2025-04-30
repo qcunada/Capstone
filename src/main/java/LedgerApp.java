@@ -61,11 +61,12 @@ public class LedgerApp {
     public static void addDeposit(){
         LocalDateTime currentDateTime = LocalDateTime.now();
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
         String formattedDate = currentDateTime.format(dtf);
 
         double deposit = 0.0;
         while (true) {
+            System.out.println("* * ADD DEPOSIT * *");
             System.out.println("Please input the amount of money to deposit:");
             String depositInput = scanner.nextLine().trim();
 
@@ -88,11 +89,11 @@ public class LedgerApp {
             System.out.println("Add a description for this deposit:");
             String description = scanner.nextLine();
 
-            System.out.println("You have deposited $" + deposit + " From " + payer + " as " + description + " on this date [ " + formattedDate + " ]");
+            System.out.println("You have deposited $" + String.format("%.2f",deposit) + " From " + payer + " as " + description + " on this date [ " + formattedDate + " ]");
 
         try{
             FileWriter fw = new FileWriter("transactions.csv",true);
-            fw.write(formattedDate + " | DEPOSIT | " + description + " | " + payer + " | " + deposit + "\n");
+            fw.write(formattedDate + " | DEPOSIT | " + description.toUpperCase() + " | " + payer.toUpperCase() + " | " + String.format("%.2f",deposit) + "\n");
             fw.close();
         }catch (IOException e){
             System.out.println(e.getMessage());
@@ -105,12 +106,13 @@ public class LedgerApp {
 
         LocalDateTime currentDateTime = LocalDateTime.now();
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
         String formattedDate = currentDateTime.format(dtf);
 
         double payment = 0.0;
 
         while(true) {
+            System.out.println("* * MAKE PAYMENT * *");
             System.out.println("Please input the amount of money you paid:");
             String paymentInput = scanner.nextLine().trim();
 
@@ -134,11 +136,11 @@ public class LedgerApp {
             System.out.println("Add a description for this payment:");
             String description = scanner.nextLine();
 
-            System.out.println("You paid $" + payment  + " for this [" + description + "] to " + payer + " on this date [ " + formattedDate + " ]");
+            System.out.println("You paid $" + String.format("%.2f", payment)  + " for this [" + description + "] to " + payer + " on this date [ " + formattedDate + " ]");
 
         try{
             FileWriter fw = new FileWriter("transactions.csv",true);
-            fw.write(formattedDate + " | PAYMENT | " + description + " | " + payer + " | " + (payment * -1) + "\n");
+            fw.write(formattedDate + " | PAYMENT | " + description.toUpperCase() + " | " + payer.toUpperCase() + " | " + String.format("%.2f",(payment * -1)) + "\n");
 
             fw.close();
 
@@ -195,7 +197,9 @@ public class LedgerApp {
     public static void showAllEntries(){
         try(BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
             String line;
-            System.out.println("* Here are all your transactions: *");
+            System.out.println();
+            System.out.println("Here are all your transactions: ");
+            System.out.println();
 
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
@@ -309,7 +313,7 @@ public class LedgerApp {
         int month = now.getMonthValue();
         String monthName = now.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
 
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
             String line;
@@ -344,7 +348,7 @@ public class LedgerApp {
 
         boolean found = false;
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
 
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
             String line;
@@ -380,7 +384,7 @@ public class LedgerApp {
         LocalDate today = LocalDate.now();
         LocalDate startOfYear = LocalDate.of(today.getYear(), 1,1);
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
 
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
             String line;
@@ -413,7 +417,7 @@ public class LedgerApp {
 
         boolean found = false;
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
 
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
             String line;
@@ -452,16 +456,17 @@ public class LedgerApp {
 
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
         String line;
-
-        while ((line = reader.readLine()) != null) {
+            System.out.println();
+            System.out.println("Here are your transactions with " + vendor + ": ");
+            System.out.println();
+            while ((line = reader.readLine()) != null) {
 
             String[] entries = line.split("\\|");
             if (entries.length >= 5) {
                 String type = entries[3].trim();
 
+
                 if (type.equalsIgnoreCase(vendor)) {
-                    System.out.println("Here are your transactions with " + vendor + ": ");
-                    System.out.println();
                     System.out.println(line);
                     found = true;
                 }
