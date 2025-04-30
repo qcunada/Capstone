@@ -1,6 +1,8 @@
 # 📊 LedgerApp - Bank Transaction Tracker
 
-Hello there! Welcome to my first capstone project. For our first capstone, we made an **Accounting Ledger Application**, where you can simply log all your deposits, payments, and view your transaction history all in one place!
+Hello there! Welcome to my first capstone project. For our first capstone, we made an **Accounting Ledger App**, where you can simply log all your deposits, payments, and view your transaction history all in one place! 
+
+If you have multiple accounts with different banks, this is your app to use!
 
 ---
 
