@@ -14,7 +14,6 @@ public class LedgerApp {
     public static void main(String[] args) {
 
         System.out.println("** WELCOME TO THE BANK APP **");
-        System.out.println();
         homeScreen();
 
     }
@@ -24,6 +23,7 @@ public class LedgerApp {
         boolean run = true;
         while (run) {
 
+            System.out.println();
             System.out.println("opening the main menu...");
             System.out.println();
             System.out.println("* * * MAIN MENU * * *");
@@ -64,19 +64,33 @@ public class LedgerApp {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String formattedDate = currentDateTime.format(dtf);
 
+        double deposit = 0.0;
+        while (true) {
+            System.out.println("Please input the amount of money to deposit:");
+            String depositInput = scanner.nextLine().trim();
 
-        try{
-            System.out.println("Please input the amount of money to deposit");
-            double deposit = Double.parseDouble(scanner.nextLine());
-
-            System.out.println("Please input the payer for this deposit");
+            try {
+                deposit = Double.parseDouble(depositInput);
+                if (deposit <= 0) {
+                    System.out.println("Invalid input. Number must be positive.");
+                    System.out.println();
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                System.out.println();
+            }
+        }
+            System.out.println("Please input the payer for this deposit:");
             String payer = scanner.nextLine();
 
-            System.out.println("Add a description for this deposit");
+            System.out.println("Add a description for this deposit:");
             String description = scanner.nextLine();
 
             System.out.println("You have deposited $" + deposit + " From " + payer + " as " + description + " on this date [ " + formattedDate + " ]");
 
+        try{
             FileWriter fw = new FileWriter("transactions.csv",true);
             fw.write(formattedDate + " | DEPOSIT | " + description + " | " + payer + " | " + deposit + "\n");
             fw.close();
@@ -94,20 +108,37 @@ public class LedgerApp {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String formattedDate = currentDateTime.format(dtf);
 
-        try{
-            System.out.println("Please input the amount of money you paid");
-            double deposit = Double.parseDouble(scanner.nextLine());
+        double payment = 0.0;
 
-            System.out.println("Please input the vendor for this payment");
+        while(true) {
+            System.out.println("Please input the amount of money you paid:");
+            String paymentInput = scanner.nextLine().trim();
+
+            try{
+                payment = Double.parseDouble(paymentInput);
+                if (payment <= 0) {
+                    System.out.println("Invalid input. Number must be positive.");
+                    System.out.println();
+                } else {
+                    break;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a valid number.");
+                System.out.println();
+            }
+        }
+
+            System.out.println("Please input the vendor for this payment:");
             String payer = scanner.nextLine();
 
-            System.out.println("Add a description for this payment");
+            System.out.println("Add a description for this payment:");
             String description = scanner.nextLine();
 
-            System.out.println("You paid $" + deposit  + " for this [" + description + "] to " + payer + " on this date [ " + formattedDate + " ]");
+            System.out.println("You paid $" + payment  + " for this [" + description + "] to " + payer + " on this date [ " + formattedDate + " ]");
 
+        try{
             FileWriter fw = new FileWriter("transactions.csv",true);
-            fw.write(formattedDate + " | PAYMENT | " + description + " | " + payer + " | " + (deposit * -1) + "\n");
+            fw.write(formattedDate + " | PAYMENT | " + description + " | " + payer + " | " + (payment * -1) + "\n");
 
             fw.close();
 
@@ -146,6 +177,7 @@ public class LedgerApp {
                     break;
                 case "d":
                     reports();
+                    break;
                 case "e":
                     runLedger = false;
                     break;
@@ -180,7 +212,8 @@ public class LedgerApp {
     public static void showDeposits(){
         try(BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
             String line;
-            System.out.println("* Here are all your deposited transactions: *");
+            System.out.println("Here are all your deposited transactions: ");
+            System.out.println();
             while ((line = reader.readLine()) != null) {
 
                 String[] entries = line.split("\\|");
@@ -205,6 +238,7 @@ public class LedgerApp {
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
             String line;
             System.out.println("Here are all your payment transactions:");
+            System.out.println();
             while ((line = reader.readLine()) != null) {
 
                 String[] entries = line.split("\\|");
@@ -281,6 +315,7 @@ public class LedgerApp {
             String line;
 
             System.out.println("Month to Date Transactions [" + monthName + "]: ");
+            System.out.println();
             while ((line = reader.readLine()) != null) {
                 String[] entries = line.split("\\|");
                 if (entries.length >= 5){
@@ -303,8 +338,8 @@ public class LedgerApp {
 
     public static void showPreviousMonth(){
         LocalDate previousMonthDate = LocalDate.now().minusMonths(1);
-        int year = previousMonthDate.getYear();
-        int month = previousMonthDate.getMonthValue();
+        int thisYear = previousMonthDate.getYear();
+        int lastMonth = previousMonthDate.getMonthValue();
         String lastMonthName = LocalDate.now().minusMonths(1).getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 
         boolean found = false;
@@ -315,12 +350,13 @@ public class LedgerApp {
             String line;
 
             System.out.println("Previous Month Transactions [" + lastMonthName + "]: ");
+            System.out.println();
             while ((line = reader.readLine()) != null) {
                 String[] entries = line.split("\\|");
                 if (entries.length >= 5){
                     LocalDate entryDate = LocalDate.parse(entries[0].trim(),dtf);
 
-                    if(entryDate.getYear() == year && entryDate.getMonthValue() == month){
+                    if(entryDate.getYear() == thisYear && entryDate.getMonthValue() == lastMonth){
                         System.out.println(line);
                         found = true;
                     }
@@ -350,6 +386,7 @@ public class LedgerApp {
             String line;
 
             System.out.println("Year To Date Transactions: ");
+            System.out.println();
             while ((line = reader.readLine()) != null) {
                 String[] entries = line.split("\\|");
                 if (entries.length >= 5){
@@ -382,6 +419,7 @@ public class LedgerApp {
             String line;
 
             System.out.println("Previous Year Transactions: ");
+            System.out.println();
             while ((line = reader.readLine()) != null) {
                 String[] entries = line.split("\\|");
                 if (entries.length >= 5){
@@ -423,14 +461,16 @@ public class LedgerApp {
 
                 if (type.equalsIgnoreCase(vendor)) {
                     System.out.println("Here are your transactions with " + vendor + ": ");
+                    System.out.println();
                     System.out.println(line);
                     found = true;
                 }
             }
         }
-        if (!found){
-            System.out.println("No transactions with " + vendor + " found.");
-        }
+            if (!found){
+                System.out.println("No transactions with " + vendor + " found.");
+            }
+
             System.out.println();
             System.out.println("Press enter to go back to the reports menu.");
             scanner.nextLine();
@@ -439,7 +479,6 @@ public class LedgerApp {
         System.out.println(e.getMessage());
 
     }
-
 
     }
 
