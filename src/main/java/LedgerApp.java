@@ -466,8 +466,8 @@ public class LedgerApp {
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
         String line;
             System.out.println();
-            System.out.println("Here are your transactions with " + vendor + ": ");
-            System.out.println();
+            System.out.println("Here are your transactions with " + vendor + ": \n");
+
             while ((line = reader.readLine()) != null) {
 
             String[] entries = line.split("\\|");
