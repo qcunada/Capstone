@@ -246,7 +246,7 @@ public class LedgerApp {
     public static void showPayments() {
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))) {
             String line;
-            System.out.println("Here are all your payment transactions:");
+            System.out.println("Here are all your payment transactions: ");
             System.out.println();
             while ((line = reader.readLine()) != null) {
 
