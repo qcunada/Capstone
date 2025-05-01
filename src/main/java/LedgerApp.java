@@ -412,7 +412,7 @@ public class LedgerApp {
 
             }
             System.out.println();
-            System.out.println("Press enter to go back to the reports menu.");
+            System.out.println("Press enter to go back to the reports menu. ");
             scanner.nextLine();
 
         } catch (Exception e) {
