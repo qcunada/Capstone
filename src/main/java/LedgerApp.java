@@ -306,7 +306,7 @@ public class LedgerApp {
                     reportsMenu = false;
                     break;
                 default:
-                    System.out.println("Invalid option. Please choose between the options on the screen. ");
+                    System.out.println("Invalid option. Please choose between the options on the screen.");
             }
 
         }
