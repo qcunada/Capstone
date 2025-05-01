@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class LedgerApp {
         static Scanner scanner = new Scanner(System.in);
     public static void main(String[] args) {
-
+        System.out.println();
         System.out.println("** WELCOME TO THE BANK APP **");
         homeScreen();
 
@@ -26,12 +26,12 @@ public class LedgerApp {
             System.out.println();
             System.out.println("opening the main menu...");
             System.out.println();
-            System.out.println("* * * MAIN MENU * * *");
+            System.out.println("   * * * MAIN MENU * * *");
             System.out.println("What do you want to do today?");
-            System.out.println("(1) Add Deposit");
-            System.out.println("(2) Make Payment");
-            System.out.println("(3) Open Ledger Screen");
-            System.out.println("(4) Exit");
+            System.out.println(" (1) Add Deposit");
+            System.out.println(" (2) Make Payment");
+            System.out.println(" (3) Open Ledger Screen");
+            System.out.println(" (4) Exit");
             System.out.println("Choose an option: ");
 
 
@@ -66,7 +66,7 @@ public class LedgerApp {
 
         double deposit = 0.0;
         while (true) {
-            System.out.println("* * ADD DEPOSIT * *");
+            System.out.println("  * * ADD DEPOSIT * *");
             System.out.println("Please input the amount of money to deposit:");
             String depositInput = scanner.nextLine().trim();
 
@@ -112,7 +112,7 @@ public class LedgerApp {
         double payment = 0.0;
 
         while(true) {
-            System.out.println("* * MAKE PAYMENT * *");
+            System.out.println("  * * MAKE PAYMENT * *");
             System.out.println("Please input the amount of money you paid:");
             String paymentInput = scanner.nextLine().trim();
 
@@ -136,7 +136,12 @@ public class LedgerApp {
             System.out.println("Add a description for this payment:");
             String description = scanner.nextLine();
 
+            System.out.println();
             System.out.println("You paid $" + String.format("%.2f", payment)  + " for this [" + description + "] to " + payer + " on this date [ " + formattedDate + " ]");
+
+            System.out.println();
+            System.out.println("Press enter to go back to the main menu.");
+            scanner.nextLine();
 
         try{
             FileWriter fw = new FileWriter("transactions.csv",true);
@@ -159,11 +164,11 @@ public class LedgerApp {
             System.out.println("Opening the ledger screen...");
             System.out.println();
             System.out.println("* * * LEDGER SCREEN * * *");
-            System.out.println("(a) Show all entries.");
-            System.out.println("(b) Display only deposits.");
-            System.out.println("(c) Display only payments.");
-            System.out.println("(d) Reports.");
-            System.out.println("(e) Exit.");
+            System.out.println(" (a) Show all entries.");
+            System.out.println(" (b) Display only deposits.");
+            System.out.println(" (c) Display only payments.");
+            System.out.println(" (d) Reports.");
+            System.out.println(" (e) Exit.");
             System.out.println("choose an option:");
 
             String choiceLedger = scanner.nextLine().toLowerCase();
@@ -272,12 +277,12 @@ public class LedgerApp {
             System.out.println("Opening the reports menu... ");
             System.out.println();
             System.out.println("* * * REPORTS MENU * * *");
-            System.out.println("(1) Month To Date");
-            System.out.println("(2) Previous Month");
-            System.out.println("(3) Year To Date");
-            System.out.println("(4) Previous Year");
-            System.out.println("(5) Search By Vendor/Payer");
-            System.out.println("(0) Exit");
+            System.out.println(" (1) Month To Date");
+            System.out.println(" (2) Previous Month");
+            System.out.println(" (3) Year To Date");
+            System.out.println(" (4) Previous Year");
+            System.out.println(" (5) Search By Vendor/Payer");
+            System.out.println(" (0) Exit");
             System.out.println("Choose an option: ");
 
             String choiceReports = scanner.nextLine().trim();
@@ -381,15 +386,19 @@ public class LedgerApp {
 
 
     public static void showYearToDate(){
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
+
         LocalDate today = LocalDate.now();
         LocalDate startOfYear = LocalDate.of(today.getYear(), 1,1);
 
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM-dd-yyyy hh:mm a");
+
+
 
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
             String line;
 
-            System.out.println("Year To Date Transactions: ");
+            System.out.println("Year To Date Transactions [" + startOfYear.getYear() + "]:");
             System.out.println();
             while ((line = reader.readLine()) != null) {
                 String[] entries = line.split("\\|");
@@ -422,7 +431,7 @@ public class LedgerApp {
         try (BufferedReader reader = new BufferedReader(new FileReader("transactions.csv"))){
             String line;
 
-            System.out.println("Previous Year Transactions: ");
+            System.out.println("Previous Year Transactions [" + previousYear + "]: ");
             System.out.println();
             while ((line = reader.readLine()) != null) {
                 String[] entries = line.split("\\|");
